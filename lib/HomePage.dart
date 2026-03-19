@@ -17,89 +17,99 @@ class _HomePageState extends State<HomePage> {
 
   static var pressStart2pFont = TextStyle(
     fontFamily: "PressStart2P",
-    color: Colors.white,
+    color: Colors.deepOrange,
     letterSpacing: 3,
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850],
-      body: Column(
-        children: [
-          SizedBox(height: 15),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(30.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // X Score
-                      Text("Player X", style: pressStart2pFont),
-                      SizedBox(height: 20),
-                      Text(xscore.toString(), style: pressStart2pFont),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(30.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // O Score
-                      Text("Player O", style: pressStart2pFont),
-                      SizedBox(height: 20),
-                      Text(oscore.toString(), style: pressStart2pFont),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.deepPurple, Colors.black],
           ),
-          Text(
-            xturn ? "Player X Turn" : "Player O Turn",
-            style: pressStart2pFont,
-          ),
-          Expanded(
-            flex: 3,
-            child: GridView.builder(
-              itemCount: 9,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    tapped(index);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[700]!),
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 15),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // X Score
+                        Text("Player X", style: pressStart2pFont),
+                        SizedBox(height: 20),
+                        Text(xscore.toString(), style: pressStart2pFont),
+                      ],
                     ),
-                    child: Center(
-                      child: Text(
-                        displayX0[index],
-                        style: TextStyle(color: Colors.white, fontSize: 40),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // O Score
+                        Text("Player O", style: pressStart2pFont),
+                        SizedBox(height: 20),
+                        Text(oscore.toString(), style: pressStart2pFont),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              xturn ? "Player X Turn" : "Player O Turn",
+              style: pressStart2pFont,
+            ),
+            Expanded(
+              flex: 3,
+              child: GridView.builder(
+                itemCount: 9,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      tapped(index);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[700]!),
+                      ),
+                      child: Center(
+                        child: Text(
+                          displayX0[index],
+                          style: pressStart2pFont.copyWith(fontSize: 40),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("TicTacToe Game", style: pressStart2pFont),
-                Text("@MADE BY HAZEMWAEL", style: pressStart2pFont),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("TicTacToe Game", style: pressStart2pFont),
+                  Text("MADE BY HAZEMWAEL", style: pressStart2pFont),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -184,17 +194,43 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Winner is: $winner'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Play Again!'),
-              onPressed: () {
-                clearBoard();
-                Navigator.of(context).pop();
-              },
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color.fromARGB(255, 58, 26, 112),
+                  const Color.fromARGB(255, 142, 19, 60),
+                ],
+              ),
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Winner is: $winner',
+                  style: pressStart2pFont.copyWith(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.grey[900],
+                    foregroundColor: Colors.deepOrange,
+                  ),
+                  child: Text('Play Again!', style: pressStart2pFont),
+                  onPressed: () {
+                    clearBoard();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -211,17 +247,43 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Draw'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Play Again!'),
-              onPressed: () {
-                clearBoard();
-                Navigator.of(context).pop();
-              },
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color.fromARGB(255, 58, 26, 112),
+                  const Color.fromARGB(255, 142, 19, 60),
+                ],
+              ),
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Draw',
+                  style: pressStart2pFont.copyWith(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.grey[900],
+                    foregroundColor: Colors.deepOrange,
+                  ),
+                  child: Text('Play Again!', style: pressStart2pFont),
+                  onPressed: () {
+                    clearBoard();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
