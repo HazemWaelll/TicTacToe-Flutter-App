@@ -74,16 +74,19 @@ class _IntroPageState extends State<IntroPage> {
                     },
                     child: Padding(
                       padding: EdgeInsets.only(left: 40, right: 40, bottom: 60),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[850],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'PLAY GAME',
-                            style: pressStart2pFont.copyWith(
-                              color: Colors.deepOrange,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey[850],
+                          ),
+                          child: Center(
+                            child: Text(
+                              'PLAY GAME',
+                              style: pressStart2pFont.copyWith(
+                                color: Colors.deepOrange,
+                              ),
                             ),
                           ),
                         ),

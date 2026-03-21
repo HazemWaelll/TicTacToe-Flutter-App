@@ -9,11 +9,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<String> displayX0 = ['', '', '', '', '', '', '', '', ''];
+  final List<int> moveHistory = []; // Used to save indexes of last moves
 
-  bool xturn = true;
+  static bool xturn = true;
+  static bool roundStartsWithX = true;
   static int xscore = 0;
   static int oscore = 0;
   int filledBoxes = 0;
+  static String streakPlayer = '';
+  static int streakCount = 0;
 
   static var pressStart2pFont = TextStyle(
     fontFamily: "PressStart2P",
@@ -76,6 +80,8 @@ class _HomePageState extends State<HomePage> {
               flex: 3,
               child: GridView.builder(
                 itemCount: 9,
+                physics:
+                    NeverScrollableScrollPhysics(), // Make the grid to be fixed in position
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                 ),
@@ -103,8 +109,55 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("TicTacToe Game", style: pressStart2pFont),
-                  Text("MADE BY HAZEMWAEL", style: pressStart2pFont),
+                  Text(
+                    streakCount == 0
+                        ? 'Win Streak: None'
+                        : 'Win Streak: Player $streakPlayer x$streakCount',
+                    style: pressStart2pFont.copyWith(fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Moves: $filledBoxes/9',
+                    style: pressStart2pFont.copyWith(fontSize: 10),
+                  ),
+                  SizedBox(height: 22),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: clearBoard,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey[850],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text('New Round', style: pressStart2pFont),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 14),
+                      GestureDetector(
+                        onTap: undoMove,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey[850],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text('Undo', style: pressStart2pFont),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -118,14 +171,30 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (xturn && displayX0[index] == '') {
         displayX0[index] = 'X';
+        moveHistory.add(index);
         filledBoxes += 1;
         xturn = !xturn;
       } else if (!xturn && displayX0[index] == '') {
         displayX0[index] = 'O';
+        moveHistory.add(index);
         filledBoxes += 1;
         xturn = !xturn;
       }
       checkWinner();
+    });
+  }
+
+  void undoMove() {
+    if (moveHistory.isEmpty) {
+      return;
+    }
+    setState(() {
+      final int lastIndex = moveHistory
+          .removeLast(); // returns the last element of the list
+      final String lastValue = displayX0[lastIndex];
+      displayX0[lastIndex] = '';
+      filledBoxes -= 1;
+      xturn = lastValue == 'X';
     });
   }
 
@@ -194,41 +263,43 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  const Color.fromARGB(255, 58, 26, 112),
-                  const Color.fromARGB(255, 142, 19, 60),
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    const Color.fromARGB(255, 58, 26, 112),
+                    const Color.fromARGB(255, 142, 19, 60),
+                  ],
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Winner is: $winner',
+                    style: pressStart2pFont.copyWith(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.grey[850],
+                    ),
+                    child: Text('Play Again!', style: pressStart2pFont),
+                    onPressed: () {
+                      clearBoard();
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ],
               ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Winner is: $winner',
-                  style: pressStart2pFont.copyWith(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.grey[900],
-                    foregroundColor: Colors.deepOrange,
-                  ),
-                  child: Text('Play Again!', style: pressStart2pFont),
-                  onPressed: () {
-                    clearBoard();
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
             ),
           ),
         );
@@ -240,6 +311,16 @@ class _HomePageState extends State<HomePage> {
     } else if (winner == 'X') {
       xscore += 1;
     }
+
+    // Winner is remain the first turn in the next round
+    roundStartsWithX = winner == 'X';
+
+    if (streakPlayer == winner) {
+      streakCount += 1;
+    } else {
+      streakPlayer = winner;
+      streakCount = 1;
+    }
   }
 
   void showDrawDialog() {
@@ -247,46 +328,51 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  const Color.fromARGB(255, 58, 26, 112),
-                  const Color.fromARGB(255, 142, 19, 60),
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    const Color.fromARGB(255, 58, 26, 112),
+                    const Color.fromARGB(255, 142, 19, 60),
+                  ],
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Draw',
+                    style: pressStart2pFont.copyWith(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.grey[850],
+                    ),
+                    child: Text('Play Again!', style: pressStart2pFont),
+                    onPressed: () {
+                      clearBoard();
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ],
               ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Draw',
-                  style: pressStart2pFont.copyWith(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.grey[900],
-                    foregroundColor: Colors.deepOrange,
-                  ),
-                  child: Text('Play Again!', style: pressStart2pFont),
-                  onPressed: () {
-                    clearBoard();
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
             ),
           ),
         );
       },
     );
+
+    streakPlayer = '';
+    streakCount = 0;
   }
 
   void clearBoard() {
@@ -294,8 +380,9 @@ class _HomePageState extends State<HomePage> {
       for (int i = 0; i < 9; i++) {
         displayX0[i] = '';
       }
+      moveHistory.clear();
+      filledBoxes = 0;
+      xturn = roundStartsWithX;
     });
-
-    filledBoxes = 0;
   }
 }
