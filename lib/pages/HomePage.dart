@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tictactoe_game/widgets/Background.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,16 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.deepPurple, Colors.black],
-          ),
-        ),
+      body: BackgroundContainer(
         child: Column(
           children: [
             SizedBox(height: 15),

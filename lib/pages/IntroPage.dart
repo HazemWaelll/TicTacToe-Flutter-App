@@ -1,15 +1,11 @@
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'homepage.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:tictactoe_game/pages/HomePage.dart';
+import 'package:tictactoe_game/widgets/Background.dart';
 
-class IntroPage extends StatefulWidget {
+class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
-  @override
-  State<IntroPage> createState() => _IntroPageState();
-}
-
-class _IntroPageState extends State<IntroPage> {
   static var pressStart2pFont = TextStyle(
     fontFamily: "PressStart2P",
     color: Colors.deepOrange,
@@ -19,16 +15,7 @@ class _IntroPageState extends State<IntroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.deepPurple, Colors.black],
-          ),
-        ),
+      body: BackgroundContainer(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -82,12 +69,7 @@ class _IntroPageState extends State<IntroPage> {
                             color: Colors.grey[850],
                           ),
                           child: Center(
-                            child: Text(
-                              'PLAY GAME',
-                              style: pressStart2pFont.copyWith(
-                                color: Colors.deepOrange,
-                              ),
-                            ),
+                            child: Text('PLAY GAME', style: pressStart2pFont),
                           ),
                         ),
                       ),
