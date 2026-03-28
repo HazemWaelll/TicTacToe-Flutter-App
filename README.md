@@ -1,6 +1,6 @@
 # Tic Tac Toe Game
 
-An offline, simple and clean Tic Tac Toe game built with Flutter.
+A simple and clean Tic Tac Toe game built with Flutter.
 
 ## Features
 
@@ -51,8 +51,8 @@ lib/
 ├── pages/
 │   ├── HomePage.dart
 │   ├── ChooseOpp.dart
-│   ├── ComputerLevels.dart
-│   ├── VsComputer.dart
+│   ├── AILevels.dart
+│   ├── VsAI.dart
 │   └── VsPlayer.dart
 └── widgets/
 	└── Background.dart
