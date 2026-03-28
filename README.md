@@ -1,13 +1,14 @@
 # Tic Tac Toe Game
 
-A simple and clean Tic Tac Toe game built with Flutter.
+An offline, simple and clean Tic Tac Toe game built with Flutter.
 
 ## Features
 
-- Two-player local gameplay (X and O)
+- Two-player local gameplay
+- Play vs AI mode
+- Choose opponent (Vs Player / Vs AI)
+- AI difficulty levels (Easy / Medium / Hard)
 - Turn indicator (shows whose turn it is)
-- Winner detection (rows, columns, diagonals)
-- Draw detection when all boxes are filled and no winner
 - Scoreboard for both players
 - Undo last move
 - New round button
@@ -19,9 +20,9 @@ A simple and clean Tic Tac Toe game built with Flutter.
 ## Screenshots
 
 <p align="center">
-   <img src="assets/images/screenshot1.png" alt="Screenshot 1" width="32%"/>
-   <img src="assets/images/screenshot2.png" alt="Screenshot 2" width="32%"/>
-   <img src="assets/images/screenshot3.png" alt="Screenshot 3" width="32%"/>
+   <img src="assets/images/screenshot1.png" alt="Screenshot 1" width="30%"/>
+   <img src="assets/images/screenshot2.png" alt="Screenshot 2" width="30%"/>
+   <img src="assets/images/screenshot3.png" alt="Screenshot 3" width="30%"/>
 </p>
 
 ## Getting Started
@@ -44,7 +45,15 @@ A simple and clean Tic Tac Toe game built with Flutter.
 
 ```text
 lib/
-├── main.dart       # App entry point
-├── IntroPage.dart  # Intro screen and start button
-└── HomePage.dart   # Game board, turns, score, streak, undo, and round logic
+├── main.dart
+├── components/
+│   └── AppFont.dart
+├── pages/
+│   ├── HomePage.dart
+│   ├── ChooseOpp.dart
+│   ├── ComputerLevels.dart
+│   ├── VsComputer.dart
+│   └── VsPlayer.dart
+└── widgets/
+	└── Background.dart
 ```
