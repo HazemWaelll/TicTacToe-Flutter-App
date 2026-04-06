@@ -171,20 +171,22 @@ class _VsAIState extends State<VsAI> {
   }
 
   void tapped(int index) {
+    if (!playerTurn || roundOver || displayX0[index].isNotEmpty) {
+      return;
+    }
+
     setState(() {
-      if (playerTurn && displayX0[index] == '') {
-        displayX0[index] = 'X';
-        moveHistory.add(index);
-        filledBoxes += 1;
-        playerTurn = !playerTurn;
-      }
-      if (!playerTurn && !roundOver) {
-        Future.delayed(const Duration(milliseconds: 300), () {
-          aiTapped();
-        });
-      }
-      checkWinner();
+      displayX0[index] = 'X';
+      moveHistory.add(index);
+      filledBoxes += 1;
+      playerTurn = false;
     });
+
+    checkWinner();
+
+    if (!playerTurn && !roundOver) {
+      aiTapped();
+    }
   }
 
   void aiTapped() {
@@ -284,6 +286,10 @@ class _VsAIState extends State<VsAI> {
   }
 
   void aiMove(int index) {
+    if (roundOver || displayX0[index].isNotEmpty || filledBoxes >= 9) {
+      return;
+    }
+
     setState(() {
       displayX0[index] = 'O';
       moveHistory.add(index);
@@ -339,6 +345,8 @@ class _VsAIState extends State<VsAI> {
   }
 
   void checkWinner() {
+    if (roundOver) return;
+
     // checks 1st row
     if (displayX0[0] == displayX0[1] &&
         displayX0[0] == displayX0[2] &&
@@ -529,9 +537,7 @@ class _VsAIState extends State<VsAI> {
     });
 
     if (!playerTurn && !roundOver) {
-      Future.delayed(const Duration(milliseconds: 250), () {
-        aiTapped();
-      });
+      aiTapped();
     }
   }
 }
